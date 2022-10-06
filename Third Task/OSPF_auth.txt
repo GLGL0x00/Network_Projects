@@ -1,0 +1,85 @@
+hostname Router
+!
+!
+!
+!
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+spanning-tree mode pvst
+!
+!
+!
+!
+!
+key chain Network
+ key 1
+  key-string Class3
+   accept-lifetime 0:0:0 Dec 1 2022 0:0:0 Sep 16 2023
+  cryptographic-algorithm md5
+!
+interface GigabitEthernet0/0/0
+ ip address 192.168.1.2 255.255.255.252
+ ip ospf authentication key-chain Network
+ ip ospf 1 area 0
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/1
+ ip address 192.168.2.1 255.255.255.252
+ ip ospf authentication key-chain Network
+ ip ospf 1 area 0
+ duplex auto
+ speed auto
+!
+interface GigabitEthernet0/0/2
+ no ip address
+ duplex auto
+ speed auto
+ shutdown
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+router ospf 1
+ log-adjacency-changes
+ area 0 authentication message-digest
+!
+ip classless
+!
+ip flow-export version 9
+!
+!
+!
+no cdp run
+!
+!
+!
+!
+!
+line con 0
+!
+line aux 0
+!
+line vty 0 4
+ login
+!
+!
+!
+end
