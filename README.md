@@ -15,11 +15,19 @@
       - HSRP 
  ### Second Task 
  >You have only 5 public ip Address and 15 pc and you want all pc's to connect with internet at same time without intteruption.
- #### protocol used
+ #### technique and protocol used
  - Dynamic PAT 
  - DHCP server 
  ### Third task 
  >Authentication using OSPF and keyChain
+ ### Fourth task 
+ > this task contain five routers, three routers at same Autonomus system and other two routers each at different autonumus system to route to external network 
+  #### technique and protocol used
+ - BGP  
+ - MPLS   
+ - Load Balancing 
+ - OSPF
+ - Key Chain at R2
  
  # Go to check for More details #
       
