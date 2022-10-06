@@ -13,7 +13,11 @@
       - EIGRP Routing Protocol 
       - Redestribution                                    
       - HSRP 
-     
+ ### Second Task 
+ >You have only 5 public ip Address and 15 pc and you want all pc's to connect with internet at same time without intteruption.
+ #### protocol used
+ - Dynamic PAT 
+ - DHCP server 
      # Go to check for More details #
       
    
