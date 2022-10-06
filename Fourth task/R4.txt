@@ -1,0 +1,139 @@
+hostname R4
+!
+boot-start-marker
+boot-end-marker
+!
+aqm-register-fnf
+!
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback4
+ ip address 5.5.5.5 255.255.255.255
+!
+interface FastEthernet0/0
+ ip address 20.0.0.2 255.0.0.0
+ duplex half
+ mpls ip
+!
+interface FastEthernet1/0
+ no ip address
+ duplex half
+!
+interface FastEthernet2/0
+ no ip address
+ duplex full
+ speed auto
+!
+interface FastEthernet2/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface Serial3/0
+ ip address 80.0.0.1 255.0.0.0
+ serial restart-delay 0
+!
+interface Serial3/1
+ ip address 30.0.0.1 255.0.0.0
+ serial restart-delay 0
+!
+interface Serial3/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+router ospf 1
+ network 5.5.5.5 0.0.0.0 area 0
+ network 20.0.0.0 0.0.0.255 area 0
+!
+router bgp 400
+ bgp log-neighbor-changes
+ network 5.5.5.5 mask 255.255.255.255
+ network 20.0.0.0
+ network 30.0.0.0
+ network 80.0.0.0
+ neighbor 1.1.1.1 remote-as 300
+ neighbor 1.1.1.1 ebgp-multihop 2
+ neighbor 1.1.1.1 update-source Loopback4
+ neighbor 3.3.3.3 remote-as 400
+ neighbor 3.3.3.3 update-source Loopback4
+ neighbor 3.3.3.3 next-hop-self
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+ip route 1.1.1.1 255.255.255.255 FastEthernet2/0
+ip route 1.1.1.1 255.255.255.255 FastEthernet1/0
+ip route 1.1.1.1 255.255.255.255 Serial3/0
+ip route 1.1.1.1 255.255.255.255 Serial3/1
+!
+!
+!
+!
+control-plane
+!
+!
+mgcp behavior rsip-range tgcp-only
+mgcp behavior comedia-role none
+mgcp behavior comedia-check-media-src disable
+mgcp behavior comedia-sdp-force disable
+!
+mgcp profile default
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ login
+ transport input all
+!
+!
+end

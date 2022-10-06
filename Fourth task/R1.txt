@@ -1,0 +1,117 @@
+hostname R1
+!
+boot-start-marker
+boot-end-marker
+!
+aqm-register-fnf
+!
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ ip address 8.8.8.8 255.255.255.255
+!
+interface FastEthernet0/0
+ no ip address
+ shutdown
+ duplex half
+!
+interface FastEthernet1/0
+ no ip address
+ shutdown
+ duplex half
+!
+interface Serial2/0
+ ip address 40.0.0.2 255.0.0.0
+ serial restart-delay 0
+!
+interface Serial2/1
+ ip address 60.0.0.2 255.0.0.0
+ serial restart-delay 0
+!
+interface Serial2/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial2/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+router bgp 200
+ bgp log-neighbor-changes
+ network 8.8.8.8 mask 255.255.255.255
+ neighbor 2.2.2.2 remote-as 400
+ neighbor 2.2.2.2 ebgp-multihop 2
+ neighbor 2.2.2.2 update-source Loopback1
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+ip route 2.2.2.2 255.255.255.255 Serial2/0
+ip route 2.2.2.2 255.255.255.255 Serial2/1
+!
+!
+!
+!
+control-plane
+!
+!
+mgcp behavior rsip-range tgcp-only
+mgcp behavior comedia-role none
+mgcp behavior comedia-check-media-src disable
+mgcp behavior comedia-sdp-force disable
+!
+mgcp profile default
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ login
+ transport input all
+!
+!
+end

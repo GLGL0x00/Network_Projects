@@ -1,0 +1,120 @@
+hostname R3
+!
+boot-start-marker
+boot-end-marker
+!
+aqm-register-fnf
+!
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback3
+ ip address 3.3.3.3 255.255.255.255
+!
+interface FastEthernet0/0
+ ip address 20.0.0.1 255.0.0.0
+ duplex half
+ mpls ip
+!
+interface FastEthernet1/0
+ ip address 10.0.0.2 255.0.0.0
+ duplex half
+ mpls ip
+!
+interface FastEthernet2/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet2/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+router ospf 1
+ network 3.3.3.3 0.0.0.0 area 0
+ network 10.0.0.0 0.0.0.255 area 0
+ network 20.0.0.0 0.0.0.255 area 0
+!
+router bgp 400
+ bgp log-neighbor-changes
+ network 3.3.3.3 mask 255.255.255.255
+ network 10.0.0.0
+ network 20.0.0.0
+ neighbor 2.2.2.2 remote-as 400
+ neighbor 2.2.2.2 update-source Loopback3
+ neighbor 2.2.2.2 route-reflector-client
+ neighbor 2.2.2.2 next-hop-self
+ neighbor 5.5.5.5 remote-as 400
+ neighbor 5.5.5.5 update-source Loopback3
+ neighbor 5.5.5.5 route-reflector-client
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+mgcp behavior rsip-range tgcp-only
+mgcp behavior comedia-role none
+mgcp behavior comedia-check-media-src disable
+mgcp behavior comedia-sdp-force disable
+!
+mgcp profile default
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ login
+ transport input all
+!
+!
+end

@@ -1,0 +1,152 @@
+
+hostname R2
+!
+boot-start-marker
+boot-end-marker
+!
+aqm-register-fnf
+!
+!
+no aaa new-model
+!
+!
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+key chain Network
+ key 1
+  key-string 7 047802150C2E
+  accept-lifetime 09:14:40 Sep 16 2022 00:00:00 Oct 1 2022
+ key 2
+  key-string 7 14341E0A1F17786B
+  accept-lifetime 00:00:00 Oct 1 2022 00:00:00 Dec 1 2022
+ key 3
+  key-string 7 096F42080A1644
+  accept-lifetime 00:00:00 Dec 1 2022 00:00:00 Sep 16 2023
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback2
+ ip address 2.2.2.2 255.255.255.255
+!
+interface FastEthernet0/0
+ no ip address
+ duplex half
+!
+interface FastEthernet1/0
+ ip address 10.0.0.1 255.0.0.0
+ duplex half
+ mpls ip
+!
+interface FastEthernet2/0
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface FastEthernet2/1
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface Serial3/0
+ ip address 40.0.0.1 255.0.0.0
+ serial restart-delay 0
+!
+interface Serial3/1
+ ip address 60.0.0.1 255.0.0.0
+ serial restart-delay 0
+!
+interface Serial3/2
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+interface Serial3/3
+ no ip address
+ shutdown
+ serial restart-delay 0
+!
+router ospf 1
+ passive-interface Serial3/0
+ passive-interface Serial3/1
+ network 2.2.2.2 0.0.0.0 area 0
+ network 10.0.0.0 0.0.0.255 area 0
+!
+router bgp 400
+ bgp log-neighbor-changes
+ network 2.2.2.2 mask 255.255.255.255
+ network 10.0.0.0
+ network 40.0.0.0
+ neighbor 3.3.3.3 remote-as 400
+ neighbor 3.3.3.3 update-source Loopback2
+ neighbor 3.3.3.3 next-hop-self
+ neighbor 8.8.8.8 remote-as 200
+ neighbor 8.8.8.8 ebgp-multihop 2
+ neighbor 8.8.8.8 update-source Loopback2
+ neighbor 40.0.0.2 remote-as 200
+!
+ip forward-protocol nd
+no ip http server
+no ip http secure-server
+!
+!
+ip route 8.8.8.8 255.255.255.255 Serial3/0
+ip route 8.8.8.8 255.255.255.255 Serial3/1
+!
+!
+!
+!
+control-plane
+!
+!
+mgcp behavior rsip-range tgcp-only
+mgcp behavior comedia-role none
+mgcp behavior comedia-check-media-src disable
+mgcp behavior comedia-sdp-force disable
+!
+mgcp profile default
+!
+!
+!
+gatekeeper
+ shutdown
+!
+!
+line con 0
+ stopbits 1
+line aux 0
+ stopbits 1
+line vty 0 4
+ login
+ transport input all
+!
+!
+end
